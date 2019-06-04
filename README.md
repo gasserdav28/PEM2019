@@ -2,7 +2,7 @@
 
 ## Start Server
 First install modules with:
-´´´npm i´´´
+npm i
 
 Then start server:
-´´´npm start´´´
+npm start
