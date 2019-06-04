@@ -19,7 +19,7 @@ app.all('/', function (req, res, next) {
 
 app.use(express.static('public'))
 
-// viewed at http://localhost:8080
+// viewed at http://localhost:3000
 app.get('/', function (req, res) {
 
     res.sendFile(path.join(__dirname + '/index.html'))
@@ -34,3 +34,6 @@ var server = app.listen(3000, function () {
     console.log(`️⚔️  BACKEND listening on port ${port} ⚔️`)
 
 })
+
+
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
