@@ -18,9 +18,19 @@ client.connect(function (err) {
     const db = client.db(dbName);
 
     insertDocuments(db, function () {
-        client.close();
     });
 });
+
+
+var gracefulExit = function () {
+        client.close();
+        console.log('> MongoDB disconnected through app termination');
+        process.exit(0);
+
+};
+
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
 
 
 const insertDocuments = function (db, callback) {
