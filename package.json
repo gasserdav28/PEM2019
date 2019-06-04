@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/gasserdav28/PEM2019/issues"
   },
-  "homepage": "https://github.com/gasserdav28/PEM2019#readme"
+  "homepage": "https://github.com/gasserdav28/PEM2019#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "path": "^0.12.7"
+  }
 }
