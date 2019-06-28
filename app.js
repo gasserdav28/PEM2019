@@ -33,7 +33,7 @@ app.get('/', function (req, res) {
 // Include Mongoose and add all endpoints (./endpoints/) to app
 var mongoose = require('mongoose');
 mongoose.connection.on('connected', function () {
-    var endpointPath = './endpoints/';
+    var endpointPath = './src/endpoints/';
     var endpoints = fs.readdirSync(endpointPath);
     endpoints = endpoints.filter(x => x.split('.')[1] === 'js');
 
