@@ -11,5 +11,5 @@ sensorSchema.statics.safeSensorData = function safeSensorData(){}
 
 
 module.exports = {
-    Sensor: mongoose.model('Sensor', sensorSchema),
+    Sensor: mongoose.model('Sensor', sensorSchema, 'sensordata'),
 };

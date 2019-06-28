@@ -44,11 +44,11 @@ mongoose.connection.on('connected', function () {
     });
 
     // Start Server
-    app.listen(3000, function () {
+    app.listen(10017, function () {
         // var port = server.address().port;
 
         console.log(`\nPEM Backend started...\n`);
-        console.log(`️⚔️  BACKEND listening on port 3000 ⚔️`)
+        console.log(`️⚔️  BACKEND listening on port 10017 ⚔️`)
     });
 });
 
