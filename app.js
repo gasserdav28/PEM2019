@@ -44,7 +44,9 @@ mongoose.connection.on('connected', function () {
     });
 
     // Start Server
-    app.listen(10017, function () {
+
+    app.listen(10017, '0.0.0.0', function () {
+
         // var port = server.address().port;
 
         console.log(`\nPEM Backend started...\n`);
