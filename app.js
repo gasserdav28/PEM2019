@@ -35,5 +35,17 @@ var server = app.listen(3000, function () {
 
 })
 
+// add all endpoints 
+// add all middleware
+// do mongo connection
+// do Enque (Bull) to mongo (how does this work??)
+
+
+
+var gracefulExit = function () {
+    console.log('> Server closed through app termination');
+    process.exit(0);
+
+};
 
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
