@@ -1,6 +1,7 @@
 var express = require('express');
 var cors = require('cors');
 var path = require('path');
+var fs = require('fs')
 var app = express();
 
 app.options('*', cors()); // include before other routes
@@ -21,68 +22,53 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'))
 });
 
-app.post('/login', function (req, res) {
-    let userID = req.query.userID;
-    // check if userID in database
-    // send cookie
-    res.send('logged in');
-});
-
-app.get('/registerDevice', function (req, res) {
-    // create random number
-    // write to database
-});
-
 
 /*
 
  ALL ENDPOINTS BELOW NEED TO BE PROTECTED -> VALID COOKIE REQUIRED
 
  */
-app.get('/sensorData', function (req, res) {
-    let dataType = req.query.dataType;
-    let from = req.query.from;
-    let to = req.query.to;
 
-    // query database
-    // send response data
-    res.send(" - " + dataType + from + to);
+
+// Include Mongoose and add all endpoints (./endpoints/) to app
+var mongoose = require('mongoose');
+mongoose.connection.on('connected', function () {
+    var endpointPath = './endpoints/';
+    var endpoints = fs.readdirSync(endpointPath);
+    endpoints = endpoints.filter(x => x.split('.')[1] === 'js');
+
+    endpoints.forEach(endpoint => {
+        console.log('Launching ' + endpoint);
+        var route = require(endpointPath + endpoint);
+        app.use('/' + endpoint.split('.')[0], route);
+    });
+
+    // Start Server
+    app.listen(3000, function () {
+        // var port = server.address().port;
+
+        console.log(`\nPEM Backend started...\n`);
+        console.log(`️⚔️  BACKEND listening on port 3000 ⚔️`)
+    });
 });
 
-app.post('/sensorData', function (req, res) {
-    // transform
-    // save to database
-    res.send(req.body);
-});
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/PEMData', { useNewUrlParser: true })
+    .then(() => console.log('Connection to MongoDB succesful'))
+    .catch((err) => console.error(err));
+
+var gracefulExit = function () {
+    mongoose.connection.close(function () {
+        logToConsole('info', 'server', '> MongoDB disconnected through app termination');
+        process.exit(0);
+    });
+};
 
 
-app.post('/sleepQuality', function (req, res) {
-    let value = req.query.value;
-    let userID = req.query.userID;
-    // save to database
 
-    res.send("value :" + value + "userID: " + userID)
-});
 
-app.get('/userData', function (req, res) {
-    let userID = req.query.userID;
-    // query database
-    // send query result
-    res.send("userID: " + userID);
-});
 
-app.post('/userData', function (req, res) {
-    // update values in database
-    res.send("body: " + req.body);
-});
 
-var server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
-
-    console.log(`\nPEM Backend started...\n`);
-    console.log(`️⚔️  BACKEND listening on port ${port} ⚔️`)
-});
 
 // add all endpoints 
 // add all middleware
