@@ -48,7 +48,7 @@ mongoose.connection.on('connected', function () {
         // var port = server.address().port;
 
         console.log(`\nPEM Backend started...\n`);
-        console.log(`️⚔️  BACKEND listening on port 10017 ⚔️`)
+        console.log(`️⚔️ PEM BACKEND listening on port 10017 ⚔️`)
     });
 });
 
