@@ -13,7 +13,7 @@ var sensorSchema = new mongoose.Schema({
 
 
 
-router.get('/sensorData', function (req, res) {
+router.get('/', function (req, res) {
     let dataType = req.query.dataType
     let from = req.query.from
     let to = req.query.to
@@ -25,7 +25,7 @@ router.get('/sensorData', function (req, res) {
 
 
 // speichert gerade nur 1 objekt. kann man aber erweitern. dann nehmen wir einfach saveMany und lassen immer einen array schicken?
-router.post('/sensorData', function (req, res) {
+router.post('/', function (req, res) {
 
     var dataModel = mongoose.model('Sensor', sensorSchema, 'sensordata')
 

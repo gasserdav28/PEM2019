@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post('/sleepQuality', function (req, res) {
+router.post('/', function (req, res) {
     let value = req.query.value;
     let userID = req.query.userID;
     // save to database

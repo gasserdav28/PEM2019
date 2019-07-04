@@ -6,7 +6,16 @@ var UserSchema = Schema({
 });
 
 // Use UserSchema.statics to define static functions
-UserSchema.statics.users = function(cb) {
+UserSchema.statics.userList = function(cb) {
+    this.find().limit( 20 ).exec( function( err, users )
+    {
+        if( err ) return cb( err );
+
+        cb(null, users);
+    });
+};
+
+UserSchema.statics.addUser = function(cb) {
     this.find().limit( 20 ).exec( function( err, users )
     {
         if( err ) return cb( err );
