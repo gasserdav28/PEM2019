@@ -3,6 +3,7 @@ var cors = require('cors');
 var path = require('path');
 var fs = require('fs')
 var app = express();
+var logger = require('morgan');
 
 app.options('*', cors()); // include before other routes
 app.use(cors());
@@ -15,6 +16,7 @@ app.all('/', function (req, res, next) {
 
 // Use app.get as app.use === middlware (Module erstellen)
 
+app.use(logger('dev'));
 app.use(express.static('public'));
 app.use(express.json());
 

@@ -1,21 +1,25 @@
-const express = require('express');
-const router = express.Router();
-let userSchema = require('../model/userSchema');
+var express = require('express');
+var router = express.Router();
+var User = require('../model/userSchema');
 
-router.get('/', function (req, res, next) {
-    let userID = req.query.userID;
+router.get('/', function (req, res) {
+    let userId = req.query.userId;
 
-    userSchema.userList(function (err, users) {
-        if (err) { return next(err); }
-        res.send("users: " + users);
+    User.find({id: userId}, function (err, user) {
+        if (err) console.log(err);
+        res.json(user);
     });
-    // query database
-    // send query result
 });
 
 router.post('/', function (req, res) {
-    // update values in database
-    res.send("body: " + req.body);
+    // TODO validate body
+    let userId = req.body.userId;
+    console.log(userId);
+
+    User.findOneAndUpdate({id: userId}, req.body, {new: true}, function (err, user) {
+        if (err) console.log(err);
+        res.json(user);
+    });
 });
 
 

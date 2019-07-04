@@ -1,11 +1,18 @@
 const express = require('express');
-const crypto = require('crypto');
+const cryptoRandomString = require('crypto-random-string');
 const router = express.Router();
-
+var User = require('../model/userSchema');
 
 router.get('/', function (req, res) {
-  res.json({ userId: 123123123 });
-  
+    // TODO detect if id already in use
+    let userId = cryptoRandomString({length: 7, characters: '1234567890'});
+
+    var newUser = new User({id: userId});
+
+    newUser.save(function (err, user) {
+        if (err) return console.error(err);
+        res.json({userId: user.id});
+    });
 });
 
 module.exports = router;
