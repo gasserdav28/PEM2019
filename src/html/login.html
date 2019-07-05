@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<form action="">
+    <p id="response">Please log in</p>
+    <input id="userId" type="text">
+    <button id="sendBtn">Login</button>
+    <script>
+        $("#sendBtn").click(function (e) {
+            e.preventDefault();
+            let userId = $('#userId').val();
+            console.log(userId);
+
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:10017/login",
+                data: JSON.stringify({userId: userId}),
+                contentType: 'application/json'
+            }).done(function (res) {
+                console.log(res);
+                $('#response').text(res);
+            })
+        });
+    </script>
+</form>
+</body>
+</html>
