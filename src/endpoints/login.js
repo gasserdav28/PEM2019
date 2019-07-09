@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-let path = require('path');
-let User = require('../model/userSchema');
+const path = require('path');
+const User = require('../model/userSchema');
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
 router.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/../html/login.html'))
@@ -14,9 +16,21 @@ router.post('/', function (req, res) {
     User.find({id: userId}, function (err, user) {
        if (err) console.log(err);
        if (user.length === 0) {
-           res.send('UserID not found');
+           res.json({
+               success: false,
+               message: 'UserID not found'
+           });
        } else {
-           res.send('Logged in');
+           let privateKey = fs.readFileSync(path.join(__dirname + '/../../private.key'), 'utf-8');
+
+           let token = jwt.sign({userId: userId}, privateKey, { algorithm:  "RS256"});
+           console.log(token);
+           res.cookie('token',token);
+           res.json({
+               success: true,
+               message: 'Authentication successful!',
+               token: token
+           });
            // TODO create and send cookie
        }
     });
