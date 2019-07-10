@@ -4,10 +4,8 @@ let path = require('path');
 let app = express();
 let logger = require('morgan');
 let mongoose = require('mongoose');
-let jwt = require('jsonwebtoken');
-let fs = require('fs');
 let cookieParser = require('cookie-parser');
-
+let authentication = require('./src/authentication');
 let loginRouter = require('./src/endpoints/login');
 let registerDeviceRouter = require('./src/endpoints/registerDevice');
 let sensorDataRouter = require('./src/endpoints/sensorData');
@@ -28,23 +26,6 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
 
-let authentication = function(req, res, next) {
-    let token = req.headers.authorization;
-    if (!token) {
-        token = req.cookies.token;
-        if (!token) {
-            res.redirect('/login');
-        }
-    }
-    let publicKey = fs.readFileSync('public.key');
-    let result = jwt.verify(token, publicKey, {algorithm:  "RS256"});
-    req.userId = result.userId;
-    console.log(result);
-
-    next();
-};
-
-
 mongoose.connection.on('connected', function () {
     app.use('/login', loginRouter);
     app.use('/registerDevice', registerDeviceRouter);
@@ -52,7 +33,7 @@ mongoose.connection.on('connected', function () {
     app.use('/sleepQuality', sleepQualityRouter);
 
     // Protected routes
-    app.use(authentication);
+    app.use(authentication.authentication);
     app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname + '/src/html/index.html'))
     });

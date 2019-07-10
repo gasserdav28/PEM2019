@@ -24,14 +24,12 @@ router.post('/', function (req, res) {
            let privateKey = fs.readFileSync(path.join(__dirname + '/../../private.key'), 'utf-8');
 
            let token = jwt.sign({userId: userId}, privateKey, { algorithm:  "RS256"});
-           console.log(token);
            res.cookie('token',token);
            res.json({
                success: true,
                message: 'Authentication successful!',
                token: token
            });
-           // TODO create and send cookie
        }
     });
 });
