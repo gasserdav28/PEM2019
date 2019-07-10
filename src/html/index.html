@@ -5,8 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
     <h1>Servus, guten Morgen</h1>
+    <div style="width: 800px; height: 800px;">
+        <canvas id="myChart" width="200" height="200"></canvas>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+           $.get("http://localhost:10017/sensorData?sensorId=1", function (data) {
+               var chartData = data.map(obj => {
+                   var newObj = {};
+                   newObj.x = obj.created;
+                   newObj.y = obj.data.value;
+                   return newObj;
+               });
+               console.log(chartData);
+
+               var ctx = document.getElementById('myChart').getContext('2d');
+               var myLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                data: chartData,
+                                label: "Temperature",
+                                borderColor: "#3e95cd",
+                                fill: false,
+                                lineTension: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                distribution: 'linear',
+                                time: {
+                                    minUnit: "minute"
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 30
+                                }
+                            }]
+                        }
+                    }
+                });
+           });
+        });
+    </script>
 </body>
 </html>

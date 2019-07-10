@@ -38,6 +38,7 @@ let authentication = function(req, res, next) {
     }
     let publicKey = fs.readFileSync('public.key');
     let result = jwt.verify(token, publicKey, {algorithm:  "RS256"});
+    req.userId = result.userId;
     console.log(result);
 
     next();
