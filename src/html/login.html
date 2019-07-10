@@ -13,7 +13,6 @@
         $("#sendBtn").click(function (e) {
             e.preventDefault();
             let userId = $('#userId').val();
-            console.log(userId);
 
             $.ajax({
                 type: "POST",
@@ -22,7 +21,11 @@
                 contentType: 'application/json'
             }).done(function (res) {
                 console.log(res);
-                $('#response').text(res);
+                $('#response').text(res.message);
+                if (res.success) {
+                    localStorage.setItem('token', res.token);
+                    document.cookie = `token=${res.token}; expires=Thu, 31 Dec 2020 12:00:00 UTC`;
+                }
             })
         });
     </script>

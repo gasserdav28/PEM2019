@@ -1,9 +1,18 @@
-var express = require('express');
-var cors = require('cors');
-var path = require('path');
-var fs = require('fs')
-var app = express();
-var logger = require('morgan');
+let express = require('express');
+let cors = require('cors');
+let path = require('path');
+let app = express();
+let logger = require('morgan');
+let mongoose = require('mongoose');
+let jwt = require('jsonwebtoken');
+let fs = require('fs');
+let cookieParser = require('cookie-parser');
+
+let loginRouter = require('./src/endpoints/login');
+let registerDeviceRouter = require('./src/endpoints/registerDevice');
+let sensorDataRouter = require('./src/endpoints/sensorData');
+let sleepQualityRouter = require('./src/endpoints/sleepQuality');
+let userDataRouter = require('./src/endpoints/userData');
 
 app.options('*', cors()); // include before other routes
 app.use(cors());
@@ -14,43 +23,42 @@ app.all('/', function (req, res, next) {
     next()
 });
 
-// Use app.get as app.use === middlware (Module erstellen)
-
 app.use(logger('dev'));
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cookieParser());
 
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/src/html/index.html'))
-});
+let authentication = function(req, res, next) {
+    let token = req.headers.authorization;
+    if (!token) {
+        token = req.cookies.token;
+        if (!token) {
+            res.redirect('/login');
+        }
+    }
+    let publicKey = fs.readFileSync('public.key');
+    let result = jwt.verify(token, publicKey, {algorithm:  "RS256"});
+    console.log(result);
+
+    next();
+};
 
 
-/*
-
- ALL ENDPOINTS BELOW NEED TO BE PROTECTED -> VALID COOKIE REQUIRED
-
- */
-
-
-// Include Mongoose and add all endpoints (./endpoints/) to app
-var mongoose = require('mongoose');
 mongoose.connection.on('connected', function () {
-    var endpointPath = './src/endpoints/';
-    var endpoints = fs.readdirSync(endpointPath);
-    endpoints = endpoints.filter(x => x.split('.')[1] === 'js');
+    app.use('/login', loginRouter);
+    app.use('/registerDevice', registerDeviceRouter);
+    app.use('/sensorData', sensorDataRouter);
+    app.use('/sleepQuality', sleepQualityRouter);
 
-    endpoints.forEach(endpoint => {
-        console.log('Launching ' + endpoint);
-        var route = require(endpointPath + endpoint);
-        app.use('/' + endpoint.split('.')[0], route);
+    // Protected routes
+    app.use(authentication);
+    app.get('/', function (req, res) {
+        res.sendFile(path.join(__dirname + '/src/html/index.html'))
     });
+    app.use('/userData', userDataRouter);
 
     // Start Server
-
     app.listen(10017, '0.0.0.0', function () {
-
-        // var port = server.address().port;
-
         console.log(`\nPEM Backend started...\n`);
         console.log(`️⚔️ PEM BACKEND listening on port 10017 ⚔️`)
     });
@@ -63,28 +71,9 @@ mongoose.connect('mongodb://localhost/PEMData', { useNewUrlParser: true })
 
 var gracefulExit = function () {
     mongoose.connection.close(function () {
-        logToConsole('info', 'server', '> MongoDB disconnected through app termination');
+        console.log('info', 'server', '> MongoDB disconnected through app termination');
         process.exit(0);
     });
 };
 
-
-
-
-
-
-
-// add all endpoints 
-// add all middleware
-// do mongo connection
-// do Enque (Bull) to mongo (how does this work??)
-
-
-
-var gracefulExit = function () {
-    console.log('> Server closed through app termination');
-    process.exit(0);
-
-};
-
-//process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
