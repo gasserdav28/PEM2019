@@ -11,22 +11,25 @@
 <body>
     <h1>Servus, guten Morgen</h1>
     <div style="width: 800px; height: 800px;">
-        <canvas id="myChart" width="200" height="200"></canvas>
+        <canvas id="temperatureChart" width="200" height="200"></canvas>
+    </div>
+    <div style="width: 800px; height: 800px;">
+        <canvas id="lightChart" width="200" height="200"></canvas>
     </div>
 
     <script>
         $(document).ready(function () {
            $.get("http://localhost:10017/sensorData?sensorId=1", function (data) {
-               var chartData = data.map(obj => {
-                   var newObj = {};
+               let chartData = data.map(obj => {
+                   let newObj = {};
                    newObj.x = obj.created;
                    newObj.y = obj.data.value;
                    return newObj;
                });
                console.log(chartData);
 
-               var ctx = document.getElementById('myChart').getContext('2d');
-               var myLineChart = new Chart(ctx, {
+               let ctx = document.getElementById('temperatureChart').getContext('2d');
+               let temperatureChart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         datasets: [
@@ -51,13 +54,54 @@
                             yAxes: [{
                                 ticks: {
                                     min: 0,
-                                    max: 30
                                 }
                             }]
                         }
                     }
                 });
            });
+
+            $.get("http://localhost:10017/sensorData?sensorId=2", function (data) {
+                let chartData = data.map(obj => {
+                    let newObj = {};
+                    newObj.x = obj.created;
+                    newObj.y = obj.data.value;
+                    return newObj;
+                });
+                console.log(chartData);
+
+                let ctx = document.getElementById('lightChart').getContext('2d');
+                let lightChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                data: chartData,
+                                label: "Light",
+                                borderColor: "#A00",
+                                fill: false,
+                                lineTension: 0
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                distribution: 'linear',
+                                time: {
+                                    minUnit: "minute"
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        }
+                    }
+                });
+            })
         });
     </script>
 </body>
