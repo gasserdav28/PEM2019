@@ -11,7 +11,7 @@ router.get('/', authentication.authentication, function (req, res) {
     console.log(userId);
 
     // add from and to
-    SensorData.find({userId: userId, sensorId: sensorId}, function (err, data) {
+    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, data) {
         if (err) console.log(err);
         res.json(data);
     });
@@ -28,25 +28,54 @@ router.post('/', function (req, res) {
 router.get('/sensorIds', function (req, res) {
     var sensors = {
         'Sensor1': {
-            id: 1,
+            id: '1',
+            name: 'Bewegungssensor RCWL-0516',
             data: {
-                'gas': 'number',
+                'detected': 'boolean'
             }
         },
         'Sensor2': {
-            id: 2,
+            id: '2',
+            name: 'Geraeuschsensor',
             data: {
-                'gas': 'number',
+                'detected': 'boolean',
+                'sound': 'number'
             }
         }, 'Sensor3': {
-            id: 3,
+            id: '3',
+            name: 'Temperatur, Luftfeuchtigkeit',
             data: {
-                'gas': 'number',
+                'temperature': 'number(°C)',
+                'humidity': 'number(%)'
             }
         }, 'Sensor4': {
-            id: 4,
+            id: '4',
+            name: 'eCO2 TVOC SGP30',
             data: {
-                'gas': 'number',
+                'tvoc': 'number(ppm)',
+                'eco2': 'number(ppm)'
+
+            }
+        },
+        'Sensor5': {
+            id: '5',
+            name: 'Licht',
+            data: {
+                'light': 'number'
+            }
+        },
+        'Sensor6': {
+            id: '6',
+            name: 'Button 1',
+            data: {
+                'pressed': 'boolean'
+            }
+        },
+        'Sensor7': {
+            id: '7',
+            name: 'Button 2',
+            data: {
+                'pressed': 'boolean'
             }
         },
 
