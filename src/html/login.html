@@ -9,6 +9,7 @@
     <p id="response">Please log in</p>
     <input id="userId" type="text">
     <button id="sendBtn">Login</button>
+    <a href="/">button</a>
     <script>
         $("#sendBtn").click(function (e) {
             e.preventDefault();
@@ -16,7 +17,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "http://127.0.0.1:10017/login",
+                url: "/login",
                 data: JSON.stringify({userId: userId}),
                 contentType: 'application/json'
             }).done(function (res) {

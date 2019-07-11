@@ -19,10 +19,10 @@
 
     <script>
         $(document).ready(function () {
-           $.get("http://localhost:10017/sensorData?sensorId=1", function (data) {
+           $.get("/sensorData?sensorId=1", function (data) {
                let chartData = data.map(obj => {
                    let newObj = {};
-                   newObj.x = obj.created;
+                   newObj.x = obj.timestamp;
                    newObj.y = obj.data.value;
                    return newObj;
                });
@@ -61,7 +61,7 @@
                 });
            });
 
-            $.get("http://localhost:10017/sensorData?sensorId=2", function (data) {
+            $.get("/sensorData?sensorId=2", function (data) {
                 let chartData = data.map(obj => {
                     let newObj = {};
                     newObj.x = obj.created;
