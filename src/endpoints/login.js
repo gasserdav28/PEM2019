@@ -13,7 +13,7 @@ router.post('/', function (req, res) {
     let userId = req.body.userId;
     console.log(req.body);
 
-    User.find({id: userId}, function (err, user) {
+    User.find({userId: userId}, function (err, user) {
        if (err) console.log(err);
        if (user.length === 0) {
            res.json({
