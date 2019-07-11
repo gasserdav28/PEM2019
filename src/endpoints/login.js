@@ -11,26 +11,33 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res) {
     let userId = req.body.userId;
-    console.log(req.body);
+    console.log(req.body.userId)
 
-    User.find({ userId: userId }, function (err, user) {
-        if (err) console.log(err);
-        if (user.length === 0) {
-            res.status(403).send({
-                error: 'UserID not found'
-            });
-        } else {
-            let privateKey = fs.readFileSync(path.join(__dirname + '/../../private.key'), 'utf-8');
+    if (!userId) {
+        res.status(403).send({
+            error: 'UserID empty'
+        });
+    }
+    else {
+        User.find({ userId: userId }, function (err, user) {
+            if (err) console.log(err);
+            if (user.length === 0) {
+                res.status(403).send({
+                    error: 'UserID not found'
+                });
+            } else {
+                let privateKey = fs.readFileSync(path.join(__dirname + '/../../private.key'), 'utf-8');
 
-            let token = jwt.sign({ userId: userId }, privateKey, { algorithm: "RS256" });
-            res.cookie('token', token);
-            res.json({
-                success: true,
-                message: 'Authentication successful!',
-                token: token
-            });
-        }
-    });
+                let token = jwt.sign({ userId: userId }, privateKey, { algorithm: "RS256" });
+                res.cookie('token', token);
+                res.json({
+                    success: true,
+                    message: 'Authentication successful!',
+                    token: token
+                });
+            }
+        });
+    }
 });
 
 module.exports = router;
