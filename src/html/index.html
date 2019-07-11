@@ -19,7 +19,7 @@
 
     <script>
         $(document).ready(function () {
-           $.get("/sensorData?sensorId=1", function (data) {
+           $.get("/g17/sensorData?sensorId=1", function (data) {
                let chartData = data.map(obj => {
                    let newObj = {};
                    newObj.x = obj.timestamp;
@@ -61,7 +61,7 @@
                 });
            });
 
-            $.get("/sensorData?sensorId=2", function (data) {
+            $.get("/g17/sensorData?sensorId=2", function (data) {
                 let chartData = data.map(obj => {
                     let newObj = {};
                     newObj.x = obj.timestamp;
