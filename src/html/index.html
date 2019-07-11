@@ -64,7 +64,7 @@
             $.get("/sensorData?sensorId=2", function (data) {
                 let chartData = data.map(obj => {
                     let newObj = {};
-                    newObj.x = obj.created;
+                    newObj.x = obj.timestamp;
                     newObj.y = obj.data.value;
                     return newObj;
                 });
