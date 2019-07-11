@@ -10,18 +10,32 @@ router.get('/', authentication.authentication, function (req, res) {
     let userId = req.userId;
     console.log(userId);
 
-    // add from and to
-    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, data) {
-        if (err) console.log(err);
-        res.json(data);
+    if (sensorId === undefined) {
+        return res.status(400).send({code: 1, msg:'Missing query parameter: sensorId'})
+    }
+
+    if (userId === undefined) {
+        return res.status(400).send({code: 1, msg:'Missing query parameter: userId'})
+    }
+
+    // TODO: add from and to
+    SensorData.find({ userId: userId, sensorId: sensorId }  , function (err, data) {
+        if (err) {
+            console.error(err);
+            return res.status(400).send({code: 2, msg: err});
+        }
+        return res.json(data);
     });
 });
 
 // Saves an array of sensor data as single entries to the database
 router.post('/', function (req, res) {
     SensorData.create(req.body, function (err) {
-        if (err) return console.error(err);
-        res.json({ success: true });
+        if (err) {
+            console.error(err);
+            return res.status(400).send({code: 3, msg: err});
+        }
+        return res.json({ success: true });
     });
 });
 
