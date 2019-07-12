@@ -14,7 +14,7 @@ router.post('/', function (req, res) {
     console.log(req.body.userId)
 
     if (!userId) {
-        res.status(403).send({
+        return res.status(403).send({
             error: 'UserID empty'
         });
     }
@@ -22,7 +22,7 @@ router.post('/', function (req, res) {
         User.find({ userId: userId }, function (err, user) {
             if (err) console.log(err);
             if (user.length === 0) {
-                res.status(403).send({
+                return res.status(403).send({
                     error: 'UserID not found'
                 });
             } else {
@@ -30,7 +30,7 @@ router.post('/', function (req, res) {
 
                 let token = jwt.sign({ userId: userId }, privateKey, { algorithm: "RS256" });
                 res.cookie('token', token);
-                res.json({
+                return res.json({
                     success: true,
                     message: 'Authentication successful!',
                     token: token
