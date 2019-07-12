@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 var sensorSchema = mongoose.Schema({
     userId: {
-        type: Number,
+        type: String,
         required: true,
         minlength: [7, `Corrupted user id - the user id should have exactly 7 digits.`],
         maxlength: [7, `Corrupted user id - the user id should have exactly 7 digits.`],
