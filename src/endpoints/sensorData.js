@@ -30,6 +30,7 @@ router.get('/', authentication.authentication, function (req, res) {
 
 // Saves an array of sensor data as single entries to the database
 router.post('/', function (req, res) {
+    console.log(`POST body: ${req.body}s`)
     SensorData.create(req.body, function (err) {
         if (err) {
             console.error(err);
