@@ -22,7 +22,7 @@ app.all('/', function (req, res, next) {
 });
 
 app.use(logger('dev'));
-app.use(express.static('public'));
+app.use(express.static('dist'));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -34,10 +34,12 @@ mongoose.connection.on('connected', function () {
 
     // Protected routes
     app.use(authentication.authentication);
-    app.get('/', function (req, res) {
-        res.sendFile(path.join(__dirname + '/src/html/index.html'))
-    });
+    
     app.use('/userData', userDataRouter);
+
+    app.get('*', function (req, res) {
+	res.sendFile(path.join(__dirname, 'dist/index.html'))
+    });
 
     // Start Server
     app.listen(10017, '0.0.0.0', function () {
