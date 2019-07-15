@@ -57,7 +57,7 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
         keys.forEach(k => {
             let data = []
             mongoData.forEach(e => {
-                let time = moment(e.timestamp).format("hh:mmh")
+                let time = moment(e.timestamp).format("hh:mm")
                 data.push({ x: time, y: e.data[k] })
             })
             series.push({
@@ -83,7 +83,7 @@ router.post('/', function (req, res) {
 
     // Parses timestamp to UTC (single Obj)
     let time = parseInt(req.body.timestamp)
-    body.timestamp = moment(time).format()
+    req.body.timestamp = moment(time).format()
 
     // Validate UserId
 
