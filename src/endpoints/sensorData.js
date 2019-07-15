@@ -32,8 +32,7 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
     let from = req.query.from;
     let to = req.query.to;
-    let userId = req.userId;
-    console.log(userId);
+    let userId = req.query.userId;
 
     if (sensorId === undefined) {
         return res.status(400).send({ code: 1, msg: 'Missing query parameter: sensorId' })
@@ -43,6 +42,9 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
         return res.status(400).send({ code: 1, msg: 'Missing query parameter: userId' })
     }
 
+    console.log(sensorId)
+    console.log(userId)
+
     // TODO: add from and to
     SensorData.find({ userId: userId, sensorId: sensorId }, function (err, data) {
         if (err) {
@@ -50,14 +52,21 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
             return res.status(400).send({ code: 2, msg: err });
         }
         console.log(data);
+        let label = []
+        let series = []
+        data.forEach(e => {
+            label.push(timestamp)
+            series.push(data.value)
+        })
         return res.json(
             {
-                label: ["04:00", "04:10", "04:20", "04:30"],
-                series: [1, 5, 4, 3,]
+                label,
+                series
             }
         );
     });
 });
+
 
 // Saves an array of sensor data as single entries to the database
 router.post('/', function (req, res) {
