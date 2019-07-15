@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 var SensorData = require('../model/sensorData');
 let authentication = require('../authentication');
+const moment = require('moment')
 
 router.get('/', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
@@ -46,23 +47,26 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
     console.log(userId)
 
     // TODO: add from and to
-    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, data) {
+    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, mongoData) {
         if (err) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
         }
-        console.log(data);
-        let label = []
+        let keys = Object.keys(mongoData[0].data)
         let series = []
-        data.forEach(e => {
-            label.push(timestamp)
-            series.push(data.value)
+        keys.forEach(k => {
+            let data = []
+            mongoData.forEach(e => {
+                let time = moment(e.timestamp).format("hh:mmh")
+                data.push({ x: time, y: e.data[k] })
+            })
+            series.push({
+                name: k,
+                data: data
+            })
         })
         return res.json(
-            {
-                label,
-                series
-            }
+            { series: series }
         );
     });
 });
