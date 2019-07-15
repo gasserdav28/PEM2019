@@ -22,7 +22,7 @@ app.all('/', function (req, res, next) {
 });
 
 app.use(logger('dev'));
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -36,10 +36,7 @@ mongoose.connection.on('connected', function () {
     app.use(authentication.authentication);
     
     app.use('/userData', userDataRouter);
-
-    app.get('*', function (req, res) {
-	res.sendFile(path.join(__dirname, 'dist/index.html'))
-    });
+    app.use("/frontend/*", (req, res) => res.sendFile(path.join(__dirname, '/dist/index.html')));
 
     // Start Server
     app.listen(10017, '0.0.0.0', function () {

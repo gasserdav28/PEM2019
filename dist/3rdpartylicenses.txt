@@ -88,11 +88,7 @@ MIT
 MIT
 MIT
 
-@types/chartist@0.9.34
-MIT
-MIT
-
-@types/selenium-webdriver@2.53.43
+@types/chartist@0.9.46
 MIT
 MIT License
 
