@@ -28,7 +28,7 @@ router.get('/', authentication.authentication, function (req, res) {
     });
 });
 
-router.get('/lineChart', authentication.authentication, function (req, res) {
+router.get('/lineSeries', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
     let from = req.query.from;
     let to = req.query.to;
@@ -50,7 +50,12 @@ router.get('/lineChart', authentication.authentication, function (req, res) {
             return res.status(400).send({ code: 2, msg: err });
         }
         console.log(data);
-        return res.json(data);
+        return res.json(
+            {
+                label: ["04:00", "04:10", "04:20", "04:30"],
+                series: [1, 5, 4, 3,]
+            }
+        );
     });
 });
 
