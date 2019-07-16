@@ -47,7 +47,10 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
     console.log(userId)
 
     // TODO: add from and to
-    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, mongoData) {
+    let now = new Date();
+    let startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    SensorData.find({ userId: userId, sensorId: sensorId , timestamp: {$gte: startOfToday}}, function (err, mongoData) {
         if (err) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
