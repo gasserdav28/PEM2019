@@ -7,7 +7,8 @@ module.exports = {
         if (!token) {
             token = req.cookies.token;
             if (!token) {
-                res.redirect('/g17/login');
+               // res.redirect('../index.html');
+	       res.status(403).send({msg: 'You need to login first!'});
             } else {
                 let publicKey = fs.readFileSync('public.key');
                 let result = jwt.verify(token, publicKey, {algorithm:  "RS256"});

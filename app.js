@@ -33,10 +33,9 @@ mongoose.connection.on('connected', function () {
     app.use('/sleepQuality', sleepQualityRouter);
 
     // Protected routes
-    app.use(authentication.authentication);
-    
-    app.use('/userData', userDataRouter);
-    app.use("/frontend/*", (req, res) => res.sendFile(path.join(__dirname, '/dist/index.html')));
+    app.use('/userData', authentication.authentication, userDataRouter);
+
+    app.use("/frontend/*", (req, res) => res.sendFile(path.join(__dirname, 'dist/index.html')));
 
     // Start Server
     app.listen(10017, '0.0.0.0', function () {
