@@ -52,7 +52,12 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
         }
-        let keys = Object.keys(mongoData[0].data)
+        let keys = [];
+        if (mongoData[0]) {
+            keys = Object.keys(mongoData[0].data)
+        } else {
+            console.log('No data found');
+        }
         let series = []
         keys.forEach(k => {
             let data = []
@@ -99,29 +104,28 @@ router.post('/', function (req, res) {
 });
 
 router.get('/sensorIds', function (req, res) {
-    var sensors = {
-        'Sensor1': {
+    var sensors = [ {
             id: '1',
             name: 'Bewegungssensor RCWL-0516',
             data: {
                 'detected': 'boolean'
             }
         },
-        'Sensor2': {
+         {
             id: '2',
             name: 'Geraeuschsensor',
             data: {
                 'detected': 'boolean',
                 'sound': 'number'
             }
-        }, 'Sensor3': {
+        },  {
             id: '3',
             name: 'Temperatur, Luftfeuchtigkeit',
             data: {
                 'temperature': 'number(°C)',
                 'humidity': 'number(%)'
             }
-        }, 'Sensor4': {
+        },  {
             id: '4',
             name: 'eCO2 TVOC SGP30',
             data: {
@@ -130,29 +134,28 @@ router.get('/sensorIds', function (req, res) {
 
             }
         },
-        'Sensor5': {
+        {
             id: '5',
             name: 'Licht',
             data: {
                 'light': 'number'
             }
         },
-        'Sensor6': {
+        {
             id: '6',
             name: 'Button 1',
             data: {
                 'pressed': 'boolean'
             }
         },
-        'Sensor7': {
+         {
             id: '7',
             name: 'Button 2',
             data: {
                 'pressed': 'boolean'
             }
-        },
+        }];
 
-    };
     res.send(sensors)
 });
 
