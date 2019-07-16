@@ -57,7 +57,7 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
         keys.forEach(k => {
             let data = []
             mongoData.forEach(e => {
-                let time = moment(e.timestamp).format("hh:mm")
+                let time = moment(e.timestamp).format()
                 data.push({ x: time, y: e.data[k] })
             })
             series.push({
