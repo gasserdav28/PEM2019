@@ -5,10 +5,6 @@ const User = require('../model/userSchema');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
-router.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname + '/../html/login.html'))
-});
-
 router.post('/', function (req, res) {
     let userId = req.body.userId;
     console.log(req.body.userId)
@@ -28,7 +24,7 @@ router.post('/', function (req, res) {
             } else {
                 let privateKey = fs.readFileSync(path.join(__dirname + '/../../private.key'), 'utf-8');
 
-                let token = jwt.sign({ userId: userId }, privateKey, { algorithm: "RS256" });
+                let token = jwt.sign({ userId: userId }, privateKey, { algorithm: "RS256", expiresIn: "90d"});
                 res.cookie('token', token);
                 return res.json({
                     success: true,

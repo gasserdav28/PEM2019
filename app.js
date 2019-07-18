@@ -4,7 +4,6 @@ let path = require('path');
 let app = express();
 let logger = require('morgan');
 let mongoose = require('mongoose');
-let cookieParser = require('cookie-parser');
 let authentication = require('./src/authentication');
 let loginRouter = require('./src/endpoints/login');
 let registerDeviceRouter = require('./src/endpoints/registerDevice');
@@ -24,7 +23,6 @@ app.all('/', function (req, res, next) {
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.json());
-app.use(cookieParser());
 
 mongoose.connection.on('connected', function () {
     app.use('/login', loginRouter);
@@ -32,11 +30,11 @@ mongoose.connection.on('connected', function () {
     app.use('/sensorData', sensorDataRouter);
     app.use('/sleepQuality', sleepQualityRouter);
 
+    app.use("/frontend/*", (req, res) => res.redirect('/'));
+
     // Protected routes
     app.use(authentication.authentication);
-    
     app.use('/userData', userDataRouter);
-    app.use("/frontend/*", (req, res) => res.sendFile(path.join(__dirname, '/dist/index.html')));
 
     // Start Server
     app.listen(10017, '0.0.0.0', function () {

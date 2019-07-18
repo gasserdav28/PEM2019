@@ -3,7 +3,7 @@ var router = express.Router();
 var User = require('../model/userSchema');
 
 router.get('/', function (req, res) {
-    let userId = req.query.userId;
+    let userId = req.userId;
 
     User.find({userId: userId}, function (err, user) {
         if (err) console.log(err);
