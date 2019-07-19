@@ -31,10 +31,8 @@ router.get('/', authentication.authentication, function (req, res) {
 
 router.get('/lineSeries', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
-    let from = new Date(req.query.from);
-    console.log('from: ' + from);
-    let to = new Date(req.query.to);
-    console.log('to: ' + to);
+    let from = req.query.from;
+    let to = req.query.to;
     let userId = req.userId;
 
     if (sensorId === undefined) {
@@ -45,7 +43,14 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
         return res.status(400).send({ code: 1, msg: 'Missing query parameter: userId' })
     }
 
-    SensorData.find({ userId: userId, sensorId: sensorId, timestamp: {$gt: from, $lt: to}}, function (err, mongoData) {
+    console.log(sensorId)
+    console.log(userId)
+
+    // TODO: add from and to
+    let now = new Date();
+    let startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    SensorData.find({ userId: userId, sensorId: sensorId , timestamp: {$gte: startOfToday}}, function (err, mongoData) {
         if (err) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
@@ -86,7 +91,7 @@ router.post('/', function (req, res) {
 
     // Parses timestamp to UTC (single Obj)
     let time = parseInt(req.body.timestamp)
-    req.body.timestamp = moment(Date.now()).format()
+    req.body.timestamp = moment(time).format()
 
     // Validate UserId
 
