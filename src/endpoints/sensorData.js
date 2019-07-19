@@ -79,19 +79,10 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
 
 // Saves an array of sensor data as single entries to the database
 router.post('/', function (req, res) {
-
-    // Parses timestamp to UTC (array)
-    // req.body.forEach(element => {
-    //     let time = parseInt(element.timestamp)
-    //     element.timestamp = moment(time).format()
-    // });
-
-    // Parses timestamp to UTC (single Obj)
-    let time = parseInt(req.body.timestamp)
-    req.body.timestamp = moment(time).format()
+    // For now we create the timestamp here, because we receive incorrect timestamps from the alarm
+    req.body.timestamp = moment().format()
 
     // Validate UserId
-
 
     console.log(`POST body: ${JSON.stringify(req.body)}s`)
     SensorData.create(req.body, function (err) {
