@@ -30,8 +30,9 @@ router.get('/', authentication.authentication, function (req, res) {
 
 router.get('/lineSeries', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
-    let from = req.query.from;
-    let to = req.query.to;
+
+    let from = new Date(req.query.from);
+    let to = new Date(req.query.to)
     let userId = req.userId;
 
     if (sensorId === undefined) {
@@ -45,11 +46,8 @@ router.get('/lineSeries', authentication.authentication, function (req, res) {
     console.log(sensorId)
     console.log(userId)
 
-    // TODO: add from and to
-    let now = new Date();
-    let startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    SensorData.find({ userId: userId, sensorId: sensorId , timestamp: {$gte: startOfToday}}, function (err, mongoData) {
+    SensorData.find({ userId: userId, sensorId: sensorId , timestamp: {$gt: from, $lt: to}}, function (err, mongoData) {
         if (err) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
