@@ -6,8 +6,8 @@ const moment = require('moment')
 
 router.get('/', authentication.authentication, function (req, res) {
     let sensorId = req.query.sensorId;
-    let from = req.query.from;
-    let to = req.query.to;
+    let from = new Date(req.query.from);
+    let to = new Date(req.query.to)
     let userId = req.userId;
     console.log(userId);
 
@@ -19,8 +19,7 @@ router.get('/', authentication.authentication, function (req, res) {
         return res.status(400).send({ code: 1, msg: 'Missing query parameter: userId' })
     }
 
-    // TODO: add from and to
-    SensorData.find({ userId: userId, sensorId: sensorId }, function (err, data) {
+    SensorData.find({ userId: userId, sensorId: sensorId, timestamp: {$gt: from, $lt: to}}, function (err, data) {
         if (err) {
             console.error(err);
             return res.status(400).send({ code: 2, msg: err });
