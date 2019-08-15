@@ -5,7 +5,10 @@ var UserSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    gender: String
+    gender: String,
+    age: Number,
+    weight: Number,
+    height: Number
 });
 
 module.exports = mongoose.model('User', UserSchema, 'users');

@@ -5,7 +5,7 @@ var User = require('../model/userSchema');
 router.get('/', function (req, res) {
     let userId = req.userId;
 
-    User.find({userId: userId}, function (err, user) {
+    User.findOne({userId: userId}, function (err, user) {
         if (err) console.log(err);
         res.json(user);
     });
@@ -13,8 +13,8 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res) {
     // TODO validate body
-    let userId = req.body.userId;
-    console.log(userId);
+    let userId = req.userId;
+    console.log(req.body);
 
     User.findOneAndUpdate({userId: userId}, req.body, {new: true}, function (err, user) {
         if (err) console.log(err);
